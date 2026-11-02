@@ -213,9 +213,21 @@ print(f"\n La categoria en la que más gastas es: {categoria_max} con {formato_p
 
 
 def gasto_diario_disponible():
-    """TICKET 8: con el saldo actual y los días que faltan para terminar el mes,
-    calcular cuánto se puede gastar por día."""
-    pendiente(8, "Integrante 3")
+   """Calcula cuánto dinero puede gastar el estudiante por día hasta fin de mes."""
+    _, _, saldo = calcular_totales()
+    
+    if saldo <= 0:
+        print("  ⚠ No tienes saldo disponible para calcular un gasto diario.")
+        return
+
+    hoy = datetime.now()
+    dias_del_mes = calendar.monthrange(hoy.year, hoy.month)[1]
+    dias_restantes = dias_del_mes - hoy.day + 1 
+
+    presupuesto_diario = saldo / dias_restantes
+    
+    print(f"\n  Tienes un saldo de {formato_pesos(saldo)} para los próximos {dias_restantes} días.")
+    print(f" Puedes gastar aproximadamente {formato_pesos(presupuesto_diario)} diarios.")
 
 
 def buscar_por_categoria():
