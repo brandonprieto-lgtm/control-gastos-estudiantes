@@ -87,25 +87,67 @@ def pendiente(ticket, integrante):
 
 def registrar_ingreso():
     """TICKET 1: pedir descripción y valor, y guardar un movimiento tipo 'ingreso'."""
-    pendiente(1, "Integrante 1")
+    print("\n--- REGISTRAR INGRESO ---")
+    descripcion = pedir_texto("Descripción (ej: Mesada, Trabajo): ")
+    valor = pedir_valor("Valor del ingreso: ")
+    movimiento = {
+        "tipo": "ingreso",
+        "categoria": None,
+        "descripcion": descripcion,
+        "valor": valor,
+        "fecha": fecha_hoy(),
+    }
+    movimientos.append(movimiento)
+    print(f"  ✔ Ingreso registrado: {descripcion} por {formato_pesos(valor)}")
 
 
 def ver_historial():
     """TICKET 2: mostrar todos los movimientos en una tabla
     (número, fecha, tipo, categoría, descripción, valor)."""
-    pendiente(2, "Integrante 1")
+    print("\n--- HISTORIAL DE MOVIMIENTOS ---")
+    if not movimientos:
+        print("  No hay movimientos.")
+        return
+    print(f"{'N°':<4}{'Fecha':<12}{'Tipo':<9}{'Categoría':<17}{'Descripción':<20}{'Valor':>12}")
+    print("-" * 74)
+    for numero, m in enumerate(movimientos, start=1):
+        categoria = m["categoria"] if m["categoria"] else "-"
+        print(f"{numero:<4}{m['fecha']:<12}{m['tipo']:<9}{categoria:<17}"
+              f"{m['descripcion'][:19]:<20}{formato_pesos(m['valor']):>12}")
+    print("-" * 74)
+    ingresos, gastos, saldo = calcular_totales()
+    print(f"  Total ingresos: {formato_pesos(ingresos)}")
+    print(f"  Total gastos:   {formato_pesos(gastos)}")
+    print(f"  Saldo actual:   {formato_pesos(saldo)}")
 
 
 def definir_presupuesto():
     """TICKET 3 (parte A): pedir el presupuesto mensual y guardarlo en la variable global."""
-    pendiente(3, "Integrante 1")
+    global presupuesto
+    print("\n--- DEFINIR PRESUPUESTO MENSUAL ---")
+    if presupuesto > 0:
+        print(f"  Presupuesto actual: {formato_pesos(presupuesto)}")
+    presupuesto = pedir_valor("Nuevo presupuesto mensual para gastos: ")
+    print(f"  ✔ Presupuesto definido en {formato_pesos(presupuesto)}")
+    verificar_presupuesto()
 
 
 def verificar_presupuesto():
     """TICKET 3 (parte B): si hay presupuesto y los gastos pasan del 80 % o del 100 %,
     mostrar una alerta. El menú la llama sola después de cada gasto.
     Mientras no esté hecha, no hace nada (para no llenar la pantalla de avisos)."""
-    pass
+    if presupuesto <= 0:
+        return
+    _, total_gastos, _ = calcular_totales()
+    porcentaje = total_gastos / presupuesto * 100
+    if porcentaje >= 100:
+        exceso = total_gastos - presupuesto
+        print(f"  🚨 ALERTA: superó el presupuesto ({porcentaje:.0f} %). "
+              f"Se pasó por {formato_pesos(exceso)}.")
+    elif porcentaje >= 80:
+        restante = presupuesto - total_gastos
+        print(f"  ⚠ Cuidado: ya usó el {porcentaje:.0f} % del presupuesto. "
+              f"Le quedan {formato_pesos(restante)}.")
 
 
 # =============================================================================
