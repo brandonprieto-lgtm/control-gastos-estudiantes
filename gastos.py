@@ -115,7 +115,71 @@ def verificar_presupuesto():
 def registrar_gasto():
     """TICKET 4: mostrar las categorías numeradas, elegir una, pedir descripción
     y valor, y guardar un movimiento tipo 'gasto'. Avisar si el saldo queda negativo."""
-    pendiente(4, "Integrante 2")
+    print("\n--- REGISTRAR GASTO ---")
+    print("  Categorías disponibles:")
+    for i, cat in enumerate(CATEGORIAS, start=1):
+        print(f"    {i}. {cat}")
+
+    while True:
+        eleccion = input("  Elija una categoría (número): ").strip()
+        if eleccion.isdigit() and 1 <= int(eleccion) <= len(CATEGORIAS):
+            categoria = CATEGORIAS[int(eleccion) - 1]
+            break
+        print("  ⚠ Opción no válida. Elija un número de la lista.")
+
+    descripcion = pedir_texto("  Descripción del gasto: ")
+    valor = pedir_valor("  Valor del gasto: ")
+
+    movimientos.append({
+        "tipo": "gasto",
+        "categoria": categoria,
+        "descripcion": descripcion,
+        "valor": valor,
+        "fecha": fecha_hoy(),
+    })
+    print(f"  ✓ Gasto registrado: {descripcion} ({categoria}) por {formato_pesos(valor)}.")
+
+    _, _, saldo = calcular_totales()
+    if saldo < 0:
+        print(f"  🚨 ¡Cuidado! Su saldo quedó negativo: {formato_pesos(saldo)}.")
+
+
+def ver_saldo():
+    """TICKET 5: mostrar total de ingresos, total de gastos y saldo disponible."""
+    print("\n--- SALDO DISPONIBLE ---")
+    ingresos, gastos, saldo = calcular_totales()
+    print(f"  Total ingresos    : {formato_pesos(ingresos):>15}")
+    print(f"  Total gastos      : {formato_pesos(gastos):>15}")
+    print(f"  Saldo disponible  : {formato_pesos(saldo):>15}")
+
+    if presupuesto > 0:
+        restante = presupuesto - gastos
+        print(f"  Presupuesto mensual: {formato_pesos(presupuesto):>14}")
+        print(f"  Restante del presupuesto: {formato_pesos(restante):>11}")
+
+
+def eliminar_ultimo():
+    """TICKET 6: mostrar el último movimiento, pedir confirmación (s/n) y borrarlo."""
+    print("\n--- ELIMINAR ÚLTIMO MOVIMIENTO ---")
+    if not movimientos:
+        print("  No hay movimientos para eliminar.")
+        return
+
+    m = movimientos[-1]
+    categoria = m["categoria"] if m["categoria"] else "-"
+    print(f"  Último movimiento:")
+    print(f"    Fecha      : {m['fecha']}")
+    print(f"    Tipo       : {m['tipo']}")
+    print(f"    Categoría  : {categoria}")
+    print(f"    Descripción: {m['descripcion']}")
+    print(f"    Valor      : {formato_pesos(m['valor'])}")
+
+    respuesta = input("  ¿Eliminar este movimiento? (s/n): ").strip().lower()
+    if respuesta == "s":
+        movimientos.pop()
+        print("  ✓ Movimiento eliminado.")
+    else:
+        print("  Operación cancelada.")
 
 
 def ver_saldo():
