@@ -182,15 +182,6 @@ def eliminar_ultimo():
         print("  Operación cancelada.")
 
 
-def ver_saldo():
-    """TICKET 5: mostrar total de ingresos, total de gastos y saldo disponible."""
-    pendiente(5, "Integrante 2")
-
-
-def eliminar_ultimo():
-    """TICKET 6: mostrar el último movimiento, pedir confirmación (s/n) y borrarlo."""
-    pendiente(6, "Integrante 2")
-
 
 # =============================================================================
 # INTEGRANTE 3 — Tickets 7, 8 y 9
