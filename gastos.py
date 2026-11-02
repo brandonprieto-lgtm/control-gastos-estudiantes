@@ -195,6 +195,22 @@ if total_gastos == 0:
     print ("no hay gastos registrados aún")
     return 
 
+gastos_por_categoria = {cat: 0 for cat in CATEGORIAS}
+for m in movimientos:
+    if m["tipo"] == "gasto" and m["categoria"] in gastos_por_categoria:
+        gastos_por_categoria[m["categoria"]] += m["valor"]
+print("\n-- RESUMEN  DE GASTOS POR CATEGORIA ---")
+categoria_max = ""
+max_gasto = -1
+for cat, valor in gastos_por_categoria.items():
+    porcentaje = (valor / total_gastos) * 100 if total_gastos > 0 else 0
+    print (f" {cat}: {formato_pesos(valor)} ({porcentaje:.1f}%)")
+    if valor > max_gasto:
+        max_gasto = valor
+        categoria_max = cat
+
+print(f"\n La categoria en la que más gastas es: {categoria_max} con {formato_pesos(max_gasto)}")
+
 
 def gasto_diario_disponible():
     """TICKET 8: con el saldo actual y los días que faltan para terminar el mes,
