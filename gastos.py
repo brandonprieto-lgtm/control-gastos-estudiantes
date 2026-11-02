@@ -231,9 +231,38 @@ def gasto_diario_disponible():
 
 
 def buscar_por_categoria():
-    """TICKET 9: elegir una categoría y mostrar solo los gastos de esa categoría
-    con su total."""
-    pendiente(9, "Integrante 3")
+    """Muestra un menú de categorías, filtra y suma los gastos de la categoría elegida."""
+    print("\n--- CATEGORÍAS DISPONIBLES ---")
+    for i, cat in enumerate(CATEGORIAS, 1):
+        print(f"  {i}. {cat}")
+    
+    try:
+        opcion = int(input("Elija el número de la categoría: "))
+    except ValueError:
+        print("  ⚠ Por favor, ingrese un número válido.")
+        return
+
+    if opcion < 1 or opcion > len(CATEGORIAS):
+        print("  ⚠ Opción no válida.")
+        return
+        
+    categoria_elegida = CATEGORIAS[opcion - 1]
+    
+    # Filtrar solo los gastos que coincidan con la categoría
+    gastos_filtrados = [m for m in movimientos if m["tipo"] == "gasto" and m["categoria"] == categoria_elegida]
+    
+    print(f"\n--- GASTOS EN: {categoria_elegida.upper()} ---")
+    if not gastos_filtrados:
+        print("  No hay gastos registrados en esta categoría.")
+        return
+        
+    total_categoria = 0
+    # Imprimir historial y sumar
+    for m in gastos_filtrados:
+        print(f"  - {m['fecha']}: {m['descripcion']} -> {formato_pesos(m['valor'])}")
+        total_categoria += m["valor"]
+        
+    print(f"\n  Total gastado en {categoria_elegida}: {formato_pesos(total_categoria)}")
 
 
 # =============================================================================
