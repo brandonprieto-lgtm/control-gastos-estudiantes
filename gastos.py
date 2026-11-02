@@ -135,7 +135,10 @@ def eliminar_ultimo():
 def ver_resumen():
     """TICKET 7: total gastado por categoría con su porcentaje,
     y decir en qué categoría se gasta más."""
-    pendiente(7, "Integrante 3")
+ _, total_gastos, _= calcular_totales()
+if total_gastos == 0:
+    print ("no hay gastos registrados aún")
+    return 
 
 
 def gasto_diario_disponible():
