@@ -104,7 +104,21 @@ def registrar_ingreso():
 def ver_historial():
     """TICKET 2: mostrar todos los movimientos en una tabla
     (número, fecha, tipo, categoría, descripción, valor)."""
-    pendiente(2, "Integrante 1")
+    print("\n--- HISTORIAL DE MOVIMIENTOS ---")
+    if not movimientos:
+        print("  No hay movimientos.")
+        return
+    print(f"{'N°':<4}{'Fecha':<12}{'Tipo':<9}{'Categoría':<17}{'Descripción':<20}{'Valor':>12}")
+    print("-" * 74)
+    for numero, m in enumerate(movimientos, start=1):
+        categoria = m["categoria"] if m["categoria"] else "-"
+        print(f"{numero:<4}{m['fecha']:<12}{m['tipo']:<9}{categoria:<17}"
+              f"{m['descripcion'][:19]:<20}{formato_pesos(m['valor']):>12}")
+    print("-" * 74)
+    ingresos, gastos, saldo = calcular_totales()
+    print(f"  Total ingresos: {formato_pesos(ingresos)}")
+    print(f"  Total gastos:   {formato_pesos(gastos)}")
+    print(f"  Saldo actual:   {formato_pesos(saldo)}")
 
 
 def definir_presupuesto():
