@@ -87,7 +87,18 @@ def pendiente(ticket, integrante):
 
 def registrar_ingreso():
     """TICKET 1: pedir descripción y valor, y guardar un movimiento tipo 'ingreso'."""
-    pendiente(1, "Integrante 1")
+    print("\n--- REGISTRAR INGRESO ---")
+    descripcion = pedir_texto("Descripción (ej: Mesada, Trabajo): ")
+    valor = pedir_valor("Valor del ingreso: ")
+    movimiento = {
+        "tipo": "ingreso",
+        "categoria": None,
+        "descripcion": descripcion,
+        "valor": valor,
+        "fecha": fecha_hoy(),
+    }
+    movimientos.append(movimiento)
+    print(f"  ✔ Ingreso registrado: {descripcion} por {formato_pesos(valor)}")
 
 
 def ver_historial():
