@@ -123,14 +123,31 @@ def ver_historial():
 
 def definir_presupuesto():
     """TICKET 3 (parte A): pedir el presupuesto mensual y guardarlo en la variable global."""
-    pendiente(3, "Integrante 1")
+    global presupuesto
+    print("\n--- DEFINIR PRESUPUESTO MENSUAL ---")
+    if presupuesto > 0:
+        print(f"  Presupuesto actual: {formato_pesos(presupuesto)}")
+    presupuesto = pedir_valor("Nuevo presupuesto mensual para gastos: ")
+    print(f"  ✔ Presupuesto definido en {formato_pesos(presupuesto)}")
+    verificar_presupuesto()
 
 
 def verificar_presupuesto():
     """TICKET 3 (parte B): si hay presupuesto y los gastos pasan del 80 % o del 100 %,
     mostrar una alerta. El menú la llama sola después de cada gasto.
     Mientras no esté hecha, no hace nada (para no llenar la pantalla de avisos)."""
-    pass
+    if presupuesto <= 0:
+        return
+    _, total_gastos, _ = calcular_totales()
+    porcentaje = total_gastos / presupuesto * 100
+    if porcentaje >= 100:
+        exceso = total_gastos - presupuesto
+        print(f"  🚨 ALERTA: superó el presupuesto ({porcentaje:.0f} %). "
+              f"Se pasó por {formato_pesos(exceso)}.")
+    elif porcentaje >= 80:
+        restante = presupuesto - total_gastos
+        print(f"  ⚠ Cuidado: ya usó el {porcentaje:.0f} % del presupuesto. "
+              f"Le quedan {formato_pesos(restante)}.")
 
 
 # =============================================================================
