@@ -190,30 +190,31 @@ def eliminar_ultimo():
 def ver_resumen():
     """TICKET 7: total gastado por categoría con su porcentaje,
     y decir en qué categoría se gasta más."""
- _, total_gastos, _= calcular_totales()
-if total_gastos == 0:
-    print ("no hay gastos registrados aún")
-    return 
+    _, total_gastos, _ = calcular_totales()
+    if total_gastos == 0:
+        print("\nNo hay gastos registrados aún.")
+        return
 
-gastos_por_categoria = {cat: 0 for cat in CATEGORIAS}
-for m in movimientos:
-    if m["tipo"] == "gasto" and m["categoria"] in gastos_por_categoria:
-        gastos_por_categoria[m["categoria"]] += m["valor"]
-print("\n-- RESUMEN  DE GASTOS POR CATEGORIA ---")
-categoria_max = ""
-max_gasto = -1
-for cat, valor in gastos_por_categoria.items():
-    porcentaje = (valor / total_gastos) * 100 if total_gastos > 0 else 0
-    print (f" {cat}: {formato_pesos(valor)} ({porcentaje:.1f}%)")
-    if valor > max_gasto:
-        max_gasto = valor
-        categoria_max = cat
+    gastos_por_categoria = {cat: 0 for cat in CATEGORIAS}
+    for movimiento in movimientos:
+        if (movimiento["tipo"] == "gasto"
+                and movimiento["categoria"] in gastos_por_categoria):
+            gastos_por_categoria[movimiento["categoria"]] += movimiento["valor"]
 
-print(f"\n La categoria en la que más gastas es: {categoria_max} con {formato_pesos(max_gasto)}")
+    print("\n--- RESUMEN DE GASTOS POR CATEGORÍA ---")
+    for categoria, valor in gastos_por_categoria.items():
+        porcentaje = valor / total_gastos * 100
+        print(f"  {categoria}: {formato_pesos(valor)} ({porcentaje:.1f}%)")
+
+    categoria_max = max(gastos_por_categoria, key=gastos_por_categoria.get)
+    print(
+        f"\nLa categoría en la que más gastas es: {categoria_max} "
+        f"con {formato_pesos(gastos_por_categoria[categoria_max])}."
+    )
 
 
 def gasto_diario_disponible():
-   """Calcula cuánto dinero puede gastar el estudiante por día hasta fin de mes."""
+    """Calcula cuánto dinero puede gastar el estudiante por día hasta fin de mes."""
     _, _, saldo = calcular_totales()
     
     if saldo <= 0:
